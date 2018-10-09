@@ -11,6 +11,7 @@ import {
 
 import { isLT19 } from '../utils/ScreenUtil';
 import Swiper from 'react-native-swiper';
+import ScrollableTabView, {DefaultTabBar,ScrollableTabBar} from 'react-native-scrollable-tab-view';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
@@ -46,11 +47,11 @@ export default class Home extends Component {
                     </TouchableOpacity>
                     <View style={styles.headerSearchContainer}>
                         <Swiper
-                            horizontal={false}
                             showsPagination={false}
                             scrollEnabled={false}
                             autoplay={true}
                             autoplayTimeout={2}
+                            horizontal ={false}
                         >
                             {
                             this.swiperData.map((item, index) => {
@@ -69,9 +70,26 @@ export default class Home extends Component {
                     </TouchableOpacity>
 
                 </View>
+                {/*栏目条*/}
+                <View style={styles.container}>
+                    <View style={styles.columnSelect}>
+                        <Image source={require('./../../assets/images/i_menu.png')} style={{width: 20, height: 20}} />
+                    </View>
+                    <ScrollableTabView
+                        initialPage={0}
+                        renderTabBar={() => <ScrollableTabBar style={{borderBottomWidth: 0, paddingBottom: 5, width: screenWidth* .9, height: 45}}/>}
+                    >
+                        <Text tabLabel='Tab #1'>My</Text>
+                        <Text tabLabel='Tab #2 word word'>favorite</Text>
+                        <Text tabLabel='Tab #3 word word word'>project</Text>
+                        <Text tabLabel='Tab #4 word word word word'>favorite</Text>
+                        <Text tabLabel='Tab #5'>project</Text>
+                    </ScrollableTabView>
+
+                </View>
 
 
-               <Text>首页1</Text>
+               
            </View>
        );
     }
@@ -81,6 +99,7 @@ const styles = StyleSheet.create({
     container :{
         flex:1,
         backgroundColor: '#F8F8F8',
+        position:'relative'
     },
     headerContainer:{
         backgroundColor: '#d81e06',
@@ -104,7 +123,8 @@ const styles = StyleSheet.create({
         width:screenWidth*0.7,
         height:33,
         borderRadius:18,
-        backgroundColor: 'rgba(255,255,255,.3)'
+        backgroundColor: 'rgba(255,255,255,.3)',
+        overflow:'hidden'
     },
     swiperItem:{
         flex:1,
@@ -120,4 +140,17 @@ const styles = StyleSheet.create({
     headerSearchText: {
         color: '#F8F8F8'
     },
+    columnSelect: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        width: screenWidth* .1,
+        height: 50,
+        top: 0,
+        right: 0,
+        /*shadowColor:'red',
+        shadowOffset:{h:-10,w:-10},
+        shadowRadius:3,
+        shadowOpacity:1,*/
+    }
 });
