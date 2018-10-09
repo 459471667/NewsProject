@@ -6,20 +6,26 @@
  * @flow
  */
 
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {
-        Platform, 
         StyleSheet, 
-        Text, 
-        View,
+        BackHandler,
         InteractionManager
       } from 'react-native';
 
-import SplashScreen from "react-native-splash-screen";
+import RouteConfigs from "./app/RouteConfigs";
+import StackNavigatorConfig from "./app/StackNavigatorConfig";
 
-export default class App extends Component {
+import SplashScreen from "react-native-splash-screen";
+import { StackNavigator } from 'react-navigation';
+
+// 创建导航器，传入路由配置和导航配置
+const Navigation = StackNavigator(RouteConfigs,StackNavigatorConfig);
+
+export default class App extends PureComponent {
   componentDidMount(){
    this._closeStartPage();
+   this._addBackListener();
   }
 
   //关闭启动页
@@ -30,14 +36,22 @@ export default class App extends Component {
       }, 1000);
     });
   }
+  //监听返回按钮
+  _addBackListener (){
+      BackHandler.addEventListener("hardwareBackPress", function() {
+        let o = 1;
+          if (o === 2) {
+          alert('不退出1');
+          return true;
+          }
+        return false;
+      });
+  }
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-      </View>
-    );
+      <Navigation/>
+    )
   }
 }
 
