@@ -9,9 +9,11 @@ import {
    Text,
 } from 'react-native';
 
-import { isLT19 } from '../utils/ScreenUtil';
 import Swiper from 'react-native-swiper';
 import ScrollableTabView, {DefaultTabBar,ScrollableTabBar} from 'react-native-scrollable-tab-view';
+
+import { isLT19 } from '../utils/ScreenUtil';
+import XFFlatList from '../components/HomeFlatList';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
@@ -22,6 +24,20 @@ export default class Home extends Component {
 
         }
     }
+
+    tabArr = [
+        {columnName: '头条', requestCode: 'T1348647909107'},
+        {columnName: '娱乐', requestCode: 'T1348648517839'},
+        {columnName: '科技', requestCode: 'T1348649580692'},
+        {columnName: '手机', requestCode: 'T1348649654285'},
+        {columnName: '冰雪运动', requestCode: 'T1486979691117'},
+        {columnName: '云课堂', requestCode: 'T1421997195219'},
+        {columnName: '游戏', requestCode: 'T1348654151579'},
+        {columnName: '旅游', requestCode: 'T1348654204705'},
+        {columnName: '二次元', requestCode: 'T1481105123675'},
+        {columnName: '轻松一刻', requestCode: 'T1350383429665'},
+        {columnName: '体育', requestCode: 'T1348649079062'}
+    ]
 
     swiperData = [
         '华为不看好5G',
@@ -50,7 +66,7 @@ export default class Home extends Component {
                             showsPagination={false}
                             scrollEnabled={false}
                             autoplay={true}
-                            autoplayTimeout={2}
+                            autoplayTimeout={5}
                             horizontal ={false}
                         >
                             {
@@ -78,12 +94,22 @@ export default class Home extends Component {
                     <ScrollableTabView
                         initialPage={0}
                         renderTabBar={() => <ScrollableTabBar style={{borderBottomWidth: 0, paddingBottom: 5, width: screenWidth* .9, height: 45}}/>}
+                        tabBarUnderlineStyle={{ height: 2, minWidth: Math.floor(screenWidth* .9/5), backgroundColor: 'rgba(216,30,6,.8)'}}
+                        tabBarActiveTextColor="#d81e06"
+                        tabBarInactiveTextColor="#515151"
+                        tabBarTextStyle={{fontSize: 15}}
                     >
-                        <Text tabLabel='Tab #1'>My</Text>
-                        <Text tabLabel='Tab #2 word word'>favorite</Text>
-                        <Text tabLabel='Tab #3 word word word'>project</Text>
-                        <Text tabLabel='Tab #4 word word word word'>favorite</Text>
-                        <Text tabLabel='Tab #5'>project</Text>
+                        {
+                            this.tabArr.map((item, index) =>{
+                                return (
+                                    <XFFlatList
+                                        key={item.columnName}
+                                        tabLabel={item.columnName}
+                                        requestCode={item.requestCode}
+                                    />
+                                )
+                            })
+                        }
                     </ScrollableTabView>
 
                 </View>
