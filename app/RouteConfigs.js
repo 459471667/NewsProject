@@ -2,7 +2,9 @@
  * Created by HuangXiaoFeng on 2018-02-08.
  */
 
-import MianTab from './TabNavigator'
+import MianTab from './TabNavigator';
+import NewsDetail from './pages/pagesDetail/NewsDetail';
+import VideoDetail from './pages/pagesDetail/VideoDetail';
 
 /*
 
@@ -35,7 +37,20 @@ const RouteConfigs = {
             header: null
         })
     },
-   
+    NewsDetail: {
+        screen: NewsDetail,
+        navigationOptions: ({navigation}) => ({
+            header: null,
+            gesturesEnabled: true
+        })
+    },
+    VideoDetail: {
+        screen: VideoDetail,
+        navigationOptions: ({navigation}) => ({
+            header: null,
+            gesturesEnabled: true
+        })
+    },
 };
 
 export default RouteConfigs;

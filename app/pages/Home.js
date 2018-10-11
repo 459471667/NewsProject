@@ -106,6 +106,7 @@ export default class Home extends Component {
                                         key={item.columnName}
                                         tabLabel={item.columnName}
                                         requestCode={item.requestCode}
+                                        navigation={ this.props.navigation }
                                     />
                                 )
                             })
