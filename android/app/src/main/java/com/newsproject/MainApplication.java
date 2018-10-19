@@ -6,6 +6,7 @@ import com.facebook.react.ReactApplication;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
+import com.brentvatne.react.ReactVideoPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.github.yamill.orientation.OrientationPackage;
@@ -26,7 +27,8 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
           new SplashScreenReactPackage(),
-          new OrientationPackage()  
+          new OrientationPackage(),
+          new ReactVideoPackage()
       );
     }
 

@@ -4,6 +4,8 @@ import {
     Text,
     StyleSheet,
     Dimensions,
+    Image,
+    TouchableWithoutFeedback
 } from 'react-native';
 
 import PropTypes from 'prop-types';
@@ -15,7 +17,7 @@ const defaultVideoHeight = screenWidth * 9/16;
 
 export default class VideoPlayer extends Component {
 
-    static PropTypes = {
+    static propTypes = {
         onChangeOrientation: PropTypes.func,
         onTapBackButton: PropTypes.func
     }
@@ -32,6 +34,10 @@ export default class VideoPlayer extends Component {
 
     constructor(props){
         super(props);
+        let hasCover = true;
+        if (!this.props.videoCover) {
+            hasCover = false;
+        }
         this.state = {
             videoWidth: screenWidth,
             videoHeight: defaultVideoHeight,
@@ -82,11 +88,11 @@ export default class VideoPlayer extends Component {
     _onPlayEnd = () => {
         console.log('播放结束');
         this.setState({
-        currentTime: 0.0,
-        isPaused: true,
-        pause: true,
-        playFromBeginning: true,
-        isShowVideoCover: this.state.hasCover
+            currentTime: 0.0,
+            isPaused: true,
+            pause: true,
+            playFromBeginning: true,
+            isShowVideoCover: this.state.hasCover
         });
     };
 
@@ -94,9 +100,34 @@ export default class VideoPlayer extends Component {
         console.log('视频播放失败');
     };
 
+    /**触摸事件 */
+
+    //是否显示工具栏 
+    _onTopVideo= () =>{
+        let isControl = !this.state.isShowControl;
+        this.setState({
+            isShowControl: isControl
+        })
+    }
+
+    //暂停-播放
+    _onTapPlayButton = () =>{
+        let isPause = !this.state.isPaused
+        let isShowControl = false;
+        if (!isPause) {
+            isShowControl = true
+        }
+        this.setState({
+            isPaused: isPause,
+            isShowControl:isShowControl,
+            isShowVideoCover:false,
+        })
+    }
+
 
 
     render(){
+        console.log('封面：',this.props.videoCover)
         return (
             <View style={[{width: this.state.videoWidth, height: this.state.videoHeight,backgroundColor:'#000'}, this.props.style]}>
                  <Video
@@ -118,7 +149,32 @@ export default class VideoPlayer extends Component {
                     playInBackground={false}
                     playWhenInactive={false}
                 />
-            </View>
+                {
+                    this.state.hasCover && this.state.isShowVideoCover ?
+                    <Image style={{position:'absolute', top: 0, left: 0, width: this.state.videoWidth, height: this.state.videoHeight }} source={{uri: this.state.videoCover}}/> : null
+                }
+                <TouchableWithoutFeedback onPress={this._onTopVideo}>
+                    <View style={{
+                        position:'absolute', 
+                        top:0, left:0, 
+                        width: this.state.videoWidth, 
+                        height: this.state.videoHeight,
+                        backgroundColor: this.state.isPaused ? 'rgba(0, 0, 0, 0.2)' : 'transparent',
+                        alignItems:'center',
+                        justifyContent:'center'
+                     }}>
+                     {
+                         this.state.isPaused ? 
+                         <TouchableWithoutFeedback onPress={this._onTapPlayButton}>
+                             <Image style={styles.playButton} source={require('../../assets/images/icon_video_play.png')}/>
+                         </TouchableWithoutFeedback> : null
+                     }
+
+                    </View>
+                </TouchableWithoutFeedback>
+
+
+            </View> 
         );
     }
 }
@@ -126,5 +182,9 @@ export default class VideoPlayer extends Component {
 const styles = StyleSheet.create({
     container: {
 
-    }
+    },
+    playButton: {
+        width: 50,
+        height: 50,
+    },
 })

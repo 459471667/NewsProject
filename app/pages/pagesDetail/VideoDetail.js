@@ -73,6 +73,7 @@ export default class VideoDetail extends Component{
 
         return (
             <View style={styles.container} onLayout={this._onChangeLayout}>
+                <View style={styles.topheight}></View>
                 <VideoPlayer
                     ref={(ref) => this.videoPlayer = ref}
                     videoURL={this.uri}
@@ -91,4 +92,9 @@ const styles = StyleSheet.create({
     container:{
         flex: 1
     },
+    topheight: {
+        height:23,
+        backgroundColor:'#000'
+    }
+    
 })
