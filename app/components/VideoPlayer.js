@@ -5,7 +5,9 @@ import {
     StyleSheet,
     Dimensions,
     Image,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    TouchableOpacity,
+    Slider
 } from 'react-native';
 
 import PropTypes from 'prop-types';
@@ -121,8 +123,25 @@ export default class VideoPlayer extends Component {
             isPaused: isPause,
             isShowControl:isShowControl,
             isShowVideoCover:false,
+            pause: !this.state.isPaused
         })
     }
+    //视频滚动条
+    _onSliderValueChange = (currentTime) =>{
+        this.videoRef.seek(currentTime);
+        if (this.state.isPaused) {
+          this.setState({
+            currentTime: currentTime,
+            isPaused: false,
+            isShowVideoCover: false
+          })
+        } else {
+          this.setState({
+            currentTime: currentTime
+          })
+        }
+
+    } 
 
 
 
@@ -172,6 +191,36 @@ export default class VideoPlayer extends Component {
 
                     </View>
                 </TouchableWithoutFeedback>
+                {
+                    this.state.isShowControl ? 
+                    <View style={[styles.bottomControl, {width: this.state.videoWidth}]} >
+                        <Image
+                            source={require('../../assets/images/img_bottom_shadow.png')}
+                            style={{width: this.state.videoWidth, height: 50, position:'absolute', top: 0, left: 0}}
+                        />
+                        <TouchableOpacity activeOpacity={0.3} onPress={this._onTapPlayButton} >
+                            <Image
+                                style={ styles.control_play_btn }
+                                source={this.state.pause ? require('../../assets/images/icon_control_play.png') : require('../../assets/images/icon_control_pause.png')}
+                            />
+                        </TouchableOpacity>
+                        <Slider
+                            style={{flex: 1}}
+                            maximumTrackTintColor={'#999999'}//滑块右侧轨道的颜色
+                            minimumTrackTintColor={'#00c06d'}//滑块左侧轨道的颜色
+                            thumbImage={require('../../assets/images/icon_control_slider.png')}
+                            value={this.state.currentTime}
+                            minimumValue={0}
+                            maximumValue={Number(this.state.duration)}
+                            onValueChange={this._onSliderValueChange}
+                        />
+                        <Text style={styles.timeText}>{formatTime(this.state.duration)}</Text>
+
+                        
+                        
+
+                    </View> : null
+                }
 
 
             </View> 
@@ -179,12 +228,42 @@ export default class VideoPlayer extends Component {
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
+export function formatTime(second) {
+    let h = 0, i = 0, s = parseInt(second);
+    if (s > 60) {
+      i = parseInt(s / 60);
+      s = parseInt(s % 60);
+    }
+    // 补零
+    let zero = function (v) {
+      return (v >> 0) < 10 ? "0" + v : v;
+    };
+    return [zero(h), zero(i), zero(s)].join(":");
+  }
 
-    },
+const styles = StyleSheet.create({
     playButton: {
         width: 50,
         height: 50,
     },
+    bottomControl:{
+        height: 50,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+    },
+    control_play_btn: {
+        height: 24,
+        width: 24,
+        marginLeft: 15,
+    },
+    timeText: {
+        fontSize: 13,
+        color: 'white',
+        marginLeft: 5,
+        marginRight: 5
+      },
 })
