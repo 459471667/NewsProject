@@ -143,6 +143,18 @@ export default class VideoPlayer extends Component {
 
     } 
 
+    _onTapSwitchButton = () => {
+        this.props.onChangeOrientation && this.props.onChangeOrientation(this.state.isFullScreen);
+    };
+
+    updateLayout(width, height, isFullScreen) {
+        this.setState({
+          videoWidth: width,
+          videoHeight: height,
+          isFullScreen: isFullScreen
+        })
+      }
+
 
 
     render(){
@@ -215,7 +227,15 @@ export default class VideoPlayer extends Component {
                             onValueChange={this._onSliderValueChange}
                         />
                         <Text style={styles.timeText}>{formatTime(this.state.duration)}</Text>
-
+                        {
+                            
+                            <TouchableOpacity activeOpacity={0.3} onPress={this._onTapSwitchButton}>
+                                <Image
+                                    style={styles.control_switch_btn}
+                                    source={this.state.isFullScreen ? require('../../assets/images/icon_control_shrink_screen.png') : require('../../assets/images/icon_control_full_screen.png')}
+                                />
+                            </TouchableOpacity> 
+                        }
                         
                         
 
@@ -265,5 +285,10 @@ const styles = StyleSheet.create({
         color: 'white',
         marginLeft: 5,
         marginRight: 5
-      },
+    },
+    control_switch_btn: {
+        width: 15,
+        height: 15,
+        marginRight: 15
+    },
 })

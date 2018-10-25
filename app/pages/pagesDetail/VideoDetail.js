@@ -60,11 +60,13 @@ export default class VideoDetail extends Component{
         if (isLandscape) {
             this.setState({
                 isFullScreen: true
-            })
+            });
+            this.videoPlayer.updateLayout(width, height, true);
         }else{
             this.setState({
                 isFullScreen: false
-            })  
+            });
+            this.videoPlayer.updateLayout(width, width * 9/16, false);
         }
     }
 
@@ -73,7 +75,7 @@ export default class VideoDetail extends Component{
 
         return (
             <View style={styles.container} onLayout={this._onChangeLayout}>
-                <View style={styles.topheight}></View>
+                { this.state.isFullScreen ? null : <View style={styles.topheight}></View> }
                 <VideoPlayer
                     ref={(ref) => this.videoPlayer = ref}
                     videoURL={this.uri}
