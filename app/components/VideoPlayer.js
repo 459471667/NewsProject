@@ -58,6 +58,7 @@ export default class VideoPlayer extends Component {
             volume: 1.0,   // 音量大小
             playRate: 1.0, // 播放速率
             lastSingleTapTime: 0,   //上次单点击视频区域的时间
+            pause:true
         }
     }
     /*播放视频回调*/ 
@@ -153,7 +154,15 @@ export default class VideoPlayer extends Component {
           videoHeight: height,
           isFullScreen: isFullScreen
         })
-      }
+    }
+
+    _onTapBackButton = () => {
+        if (this.state.isFullScreen) {
+          Orientation.lockToPortrait();
+        } else {
+          this.props.onTapBackButton && this.props.onTapBackButton();
+        }
+      };
 
 
 
@@ -241,6 +250,49 @@ export default class VideoPlayer extends Component {
 
                     </View> : null
                 }
+                { this.state.isFullScreen && this.state.isShowControl ?
+                    <View
+                        style={{
+                            position:'absolute',
+                            top: 0,
+                            left: 0,
+                            width: this.state.videoWidth,
+                            height: 50,
+                            flexDirection:'row',
+                            alignItems:'center'
+                        }}>
+                        <Image
+                            source={require('../../assets/images/img_top_shadow.png')}
+                            style={{position:'absolute', top: 0, left: 0, width: this.state.videoWidth, height:50}}
+                        />
+                        <TouchableOpacity style={styles.backButton} onPress={this._onTapBackButton}>
+                            <Image
+                            source={require('../../assets/images/icon_back.png')}
+                            style={{width: 26, height: 26}}
+                            />
+                        </TouchableOpacity>
+                        <Text style={styles.videoTitle}>{this.state.videoTitle}</Text>
+                    </View> : null
+                }
+                { this.state.isFullScreen ? null :
+                    <TouchableOpacity
+                        style={{
+                            position:'absolute',
+                            top: 5,
+                            left: 5,
+                            width: 44,
+                            height: 44,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                        onPress={this._onTapBackButton}
+                        >
+                    <Image
+                        source={require('../../assets/images/icon_back.png')}
+                        style={{width: 26, height: 26}}
+                    />
+                    </TouchableOpacity>
+                }
 
 
             </View> 
@@ -290,5 +342,17 @@ const styles = StyleSheet.create({
         width: 15,
         height: 15,
         marginRight: 15
+    },
+    backButton: {
+        flexDirection:'row',
+        width: 44,
+        height: 44,
+        alignItems:'center',
+        justifyContent:'center',
+        marginLeft: 10
+    },
+    videoTitle: {
+        fontSize: 14,
+        color: 'white'
     },
 })

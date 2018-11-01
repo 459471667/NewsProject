@@ -7,7 +7,8 @@ import {
    View,
    Image,
    Text,
-   ImageBackground
+   ImageBackground,
+   ScrollView
 } from 'react-native';
 
 import VideoPlayer from '../../components/VideoPlayer';
@@ -21,6 +22,7 @@ export default class VideoDetail extends Component{
         this.state = {
             isFullScreen: false,
             voteCount: 0,
+            isVote: false
 
         }
     }
@@ -34,6 +36,7 @@ export default class VideoDetail extends Component{
     topicName  = this.isNews? this.isNews['topicName']:this.params['topicName'];
 
     componentWillMount() {
+        console.log(this.params)
         this.setState({ voteCount: this.voteCount});
     }
     
@@ -69,6 +72,12 @@ export default class VideoDetail extends Component{
             this.videoPlayer.updateLayout(width, width * 9/16, false);
         }
     }
+    _clickVote = ()=>{
+        this.setState({
+            isVote: true,
+            voteCount: this.state.voteCount+1
+        });
+    };
 
     render() {
         console.log(this.params)
@@ -84,7 +93,36 @@ export default class VideoDetail extends Component{
                     onChangeOrientation={this._onOrientationChanged}
                     onTapBackButton={this._onClickBackButton}
                 />
-                <Text>视频详情</Text>
+                <View style={{flex: 1, backgroundColor: 'red'}}>
+                    <ScrollView style={{backgroundColor: '#f8f8f8'}}>
+                        <View  style={styles.vedioInfoContainer}>
+                            <View style={styles.infoTopContainer}>
+                                <Text style={styles.infoTitle}>{this.params.title}</Text>
+                                <TouchableOpacity activeOpacity={1} style={styles.infoRight} onPress={()=>{ !this.state.isVote && this._clickVote() }}>
+                                    <Image style={styles.infoZoveImg} source={ this.state.isVote?require('./../../../assets/images/i_vote_red.png'):require('./../../../assets/images/i_vote_black.png')} resizeMode={'contain'} />
+                                    <Text style={[styles.infoZoveText, {color: this.state.isVote?'#d81e06':'#000'}]}>{this.state.voteCount}</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                            <View style={styles.vedioPlayContainer}>
+                                <Image resizeMode={'contain'} source={require('./../../../assets/images/i_right_arrows.png')} style={{width: 15, height: 15}} />
+                                <Text style={{fontSize: 12, color: '#515151'}}>{this.playCount}次播放</Text>
+                            </View>
+
+                            <View style={styles.vedioUserContainer}>
+                                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                    <Image resizeMode={'contain'} source={{uri: this.topicImg}} style={styles.vedioUserImg}/>
+                                    <Text style={{fontSize: 12, color: '#000'}}>{this.topicName}</Text>
+                                </View>
+                                <TouchableOpacity activeOpacity={.9} style={styles.subscriptionBtn}>
+                                    <Text style={{fontSize: 12, color: '#000'}}>+订阅</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                        </View>
+                    </ScrollView>
+
+                </View>
             </View>
         )
     }
@@ -97,6 +135,65 @@ const styles = StyleSheet.create({
     topheight: {
         height:23,
         backgroundColor:'#000'
+    },
+    vedioInfoContainer: {
+        paddingHorizontal: 10,
+        paddingVertical: 12,
+    },
+    infoTopContainer: {
+        flexDirection: 'row',
+        minHeight: 60,
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+    },
+    infoRight: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        width: 60,
+        height: 40,
+        marginLeft: 10,
+        borderLeftColor: '#bfbfbf',
+        borderLeftWidth: 1,
+    },
+    infoTitle: {
+        color: '#000',
+        fontSize: 16,
+        maxWidth: screenWidth * .8,
+        lineHeight: 28,
+    },
+    infoZoveImg: {
+        width: 20,
+        height: 20,
+    },
+    infoZoveText: {
+        fontSize: 12,
+    },
+    vedioPlayContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 12,
+    },
+    vedioUserContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    vedioUserImg: {
+        width: 26,
+        height: 26,
+        borderRadius: 26,
+        marginRight: 5
+    },
+    subscriptionBtn: {
+        width: 70,
+        height: 30,
+        borderWidth: 1,
+        borderColor: '#000',
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+
     }
     
 })
